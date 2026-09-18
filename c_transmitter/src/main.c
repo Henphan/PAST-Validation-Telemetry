@@ -1,8 +1,10 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 //#include "gnss_data.h"
-#include "binary_conversion.h"
+// #include "binary_conversion.h"
+#include "packet.h"
 
 
 void read_data(char* data[][4]);
@@ -20,19 +22,34 @@ int main(void){
 	// 	s1.alt = strtod(raw_data[i][3], &endptr);
 	// 	s_array[i] = s1;
 	// }
-	double attr;
-	double entry[] = {134713.00,-32.02342,115.96431,2800.00};
-	unsigned char hex_array[4][8];
-
-	entry_to_hex(hex_array, entry);
-
-	for(i = 0; i < 4; i++){
-		for(j = 0; j < 8; j++){
-			printf("%02X ", hex_array[i][j]);
-		}
-		printf("\n");
-	}
 	
+	Packet packet1;
+
+	// 64-bit data
+	uint8_t data[8] = {
+		0xAB,
+		0xCD,
+		0xEF,
+		0x01,
+		0x23,
+		0x45,
+		0x67,
+		0x89,
+	};
+
+	uint8_t buffer[256];
+	uint16_t blength;
+
+	createPacket(&packet1, 0x01, data);
+	blength = serialisePacket(packet1, buffer);
+
+	printf("%d\n",blength);
+
+	for(i = 0; i < blength; i++){
+		printf("%02X ", buffer[i]);
+	}
+	printf("\n");
+
 	return 0;
 };
 
