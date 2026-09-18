@@ -10,29 +10,32 @@ uint8_t crc_remainder(
 	int n
 ){
 	// TODO: Validate that the poly and the n match 
+	// TODO: Replace the hardcoded array length
 	uint8_t crc, message, remainder;
-	for(int i = 0; i < n; i++){
+	for(int i = 0; i < 8; i++){
 		message = entry[i];
 		// no remainder to add on
 		if(i == 0)
-			remainder = division_first(message, poly);
+			remainder = division_first(message, poly, n);
 		// append n-amount of zeros at the end
-		else if(i == n-1)
-			crc = division_final(message, poly, remainder);
+		else if(i == 7)
+			crc = division_final(message, poly, n, remainder);
 		// add on the remainder but dont append any zero
 		else
-			remainder = division_carry_over(message, poly, remainder);
+			remainder = division_carry_over(message, poly, n, remainder);
 	}
 	return crc;
 }
 
 uint8_t division_first(
 	uint8_t message,
-	uint8_t poly
+	uint8_t poly,
+	int n
 ){
-	for (int i = 7; i >= 3; i--){
+	// NOTE: Hardcoded i = 7
+	for (int i = 7; i >= n; i--){
 		if (message & (1U << i))
-			message ^= poly << (i - 3);
+			message ^= poly << (i - n);
 	}
 	return message;
 }
@@ -40,12 +43,14 @@ uint8_t division_first(
 uint8_t division_carry_over(
 	uint8_t message,
 	uint8_t poly,
+	int n,
 	uint8_t remainder
 ){
 	uint16_t working = (((uint16_t)remainder << 8) | message);
-	for (int i = 15; i >= 3; i--){
+	// NOTE: Hardcoded i = 15
+	for (int i = 15; i >= n; i--){
 		if (working & (1U << i))
-			working ^= (uint16_t)poly << (i - 3);
+			working ^= (uint16_t)poly << (i - n);
 	}
 	return working;
 }
@@ -53,12 +58,14 @@ uint8_t division_carry_over(
 uint8_t division_final(
 	uint8_t message,
 	uint8_t poly,
+	int n,
 	uint8_t remainder
 ){
-	uint16_t working = (((uint16_t)remainder << 8) | message) << 3;
-	for (int i = 15; i >= 3; i--){
+	uint16_t working = (((uint16_t)remainder << 8) | message) << n;
+	// NOTE: Hardcoded i = 15
+	for (int i = 15; i >= n; i--){
 		if (working & (1U << i))
-			working ^= (uint16_t)poly << (i - 3);
+			working ^= (uint16_t)poly << (i - n);
 	}
 	return working;
 }

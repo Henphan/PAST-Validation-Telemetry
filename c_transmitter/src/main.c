@@ -54,16 +54,20 @@ int main(void){
 	// printf("Final CRC: %02X\n", working);
 
 
-	uint8_t entry[4] = {
+	uint8_t entry[8] = {
+		0xFF,
+		0x00,
+		0xFF,
+		0x00,
 		0xFF,
 		0x00,
 		0xFF,
 		0x00
 	};
-	uint8_t poly = 0xF;
+	uint8_t poly = 0xA;
 	uint8_t crc;
 
-	crc = crc_remainder(entry, poly, 4);
+	crc = crc_remainder(entry, poly, 3);
 	printf("Remainder: 0x%02X, %d\n", crc, crc);
 
 
