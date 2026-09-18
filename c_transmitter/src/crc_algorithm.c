@@ -2,18 +2,26 @@
 #include <stdint.h>
 
 uint8_t crc_remainder(
-	uint8_t entry[][8],
-	uint8_t poly
+	// entry: an array of eight 8-bit values (one double)
+	uint8_t entry[8],
+	// poly: an 8-bit polynomial value
+	uint8_t poly,
+	// n: the degree of the polynomial
+	int n
 ){
-	uint8_t crc;
-	uint8_t message;
-	int i, j;
-	for(i = 0; i < 4; i++){
-		for(j = 0; j < 8; j++){
-			message = entry[i][j];
-			printf("%02X ", message);
-		}
-		printf("\n");
+	// TODO: Validate that the poly and the n match 
+	uint8_t crc, message, remainder;
+	for(int i = 0; i < n; i++){
+		message = entry[i];
+		// no remainder to add on
+		if(i == 0)
+			remainder = division_first(message, poly);
+		// append n-amount of zeros at the end
+		else if(i == n-1)
+			crc = division_final(message, poly, remainder);
+		// add on the remainder but dont append any zero
+		else
+			remainder = division_carry_over(message, poly, remainder);
 	}
 	return crc;
 }

@@ -54,15 +54,19 @@ int main(void){
 	// printf("Final CRC: %02X\n", working);
 
 
-	uint8_t message1 = 0x34;
-	uint8_t message2 = 0xEC;
-	uint8_t poly = 0xB;
-	uint8_t remainder;
-	remainder = division_first(message1, poly);
-	printf("Byte1 remainder: %02X\n", remainder);
+	uint8_t entry[4] = {
+		0xFF,
+		0x00,
+		0xFF,
+		0x00
+	};
+	uint8_t poly = 0xF;
+	uint8_t crc;
 
-	remainder = division_final(message2, poly, remainder);
-	printf("Byte2 remainder: %02X\n", remainder);
+	crc = crc_remainder(entry, poly, 4);
+	printf("Remainder: 0x%02X, %d\n", crc, crc);
+
+
 
 	return 0;
 };
