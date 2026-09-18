@@ -62,4 +62,3 @@ Output:
 - uint8_t: a byte representing the final CRC
 Description:
 - This function will be run last within the crc_remainder pipeline. It will append the remainder infront and append n zeroes behind and calculate the CRC.
-
