@@ -14,7 +14,8 @@ typedef struct {
 void createPacket(
 	Packet* packet,
 	uint8_t type,
-	uint8_t* payload
+	uint8_t* payload,
+	int payload_length
 );
 
 uint16_t serialisePacket(

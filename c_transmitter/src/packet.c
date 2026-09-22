@@ -3,10 +3,10 @@
 #include <string.h>
 #include <stdio.h>
 
-void createPacket(Packet *packet, uint8_t type, uint8_t* payload){
+void createPacket(Packet *packet, uint8_t type, uint8_t* payload, int payload_length){
 	packet->start_marker = 0xAAAA;
 	packet->type = type;
-	packet->length = sizeof(payload);
+	packet->length = payload_length;
 	memcpy(packet->payload, payload, packet->length);
 	// TODO: Replace placeholder with CRC code
 	packet->crc = 0x1;
@@ -22,8 +22,9 @@ uint16_t serialisePacket(Packet packet, uint8_t buffer[256]){
 	// assigning default fields
 	// TODO: Yo this part could be cooked later on
 	// start_marker is uint16_t being assigned to uint8_t
-	buffer[index++] = packet.start_marker;
-	buffer[index++] = packet.start_marker;
+	for(int i = 0; i < 2; i++){
+		buffer[index++] = packet.start_marker;
+	}
 	buffer[index++] = packet.type;
 	buffer[index++] = packet.length;
 

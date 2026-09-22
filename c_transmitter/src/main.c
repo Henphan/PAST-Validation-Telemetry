@@ -40,7 +40,7 @@ int main(void){
 	uint8_t buffer[256];
 	uint16_t blength;
 
-	createPacket(&packet1, 0x01, data);
+	createPacket(&packet1, 0x01, data, 8);
 	blength = serialisePacket(packet1, buffer);
 
 	printf("%d\n",blength);
