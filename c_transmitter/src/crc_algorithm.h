@@ -4,10 +4,9 @@
 #include <stdio.h>
 #include <stdint.h>
 
-uint8_t crc_remainder(uint8_t entry[8],uint8_t poly, int n);
-uint8_t division_first(uint8_t message, uint8_t poly, int n);
-uint8_t division_carry_over(uint8_t message, uint8_t poly, int n, uint8_t remainder);
-uint8_t division_final(uint8_t message, uint8_t poly, int n, uint8_t remainder);
+typedef uint8_t u8;
+typedef uint16_t u16;
 
+u16 crc16(const u8* message, int length);
 
 #endif

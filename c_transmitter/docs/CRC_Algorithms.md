@@ -62,3 +62,13 @@ Output:
 - uint8_t: a byte representing the final CRC
 Description:
 - This function will be run last within the crc_remainder pipeline. It will append the remainder infront and append n zeroes behind and calculate the CRC.
+
+### A more general CRC 
+- The CRC algorithm I have as of 23/09 takes in one double as an array of 8 bytes and a 8-bit polynomial.
+- However, as I have decided to switch to CRC16 - MODBUS, I have decided to refactor this function.
+- The new function will take in the entire message instead of just a double, along with with the uint16_t polynomial.
+
+### 25/09/2026 Implementation
+- [CRC16-CCITT](https://srecord.sourceforge.net/crc16-ccitt.html)
+- One function for the entire CRC process.
+
