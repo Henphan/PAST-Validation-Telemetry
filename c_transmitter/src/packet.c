@@ -3,11 +3,22 @@
 #include <string.h>
 #include "crc_algorithm.h"
 
-void createPacket(Packet *packet, u8 type, u8* payload, int payload_length){
+void createPacket(
+	Packet* packet,
+	u8 type,
+	u8* payload,
+	int payload_length,
+	u16 frag_id,
+	u16 frag_no,
+	u16 frag_total
+){
 	packet->start_marker = 0xAAAA;
 	packet->type = type;
 	packet->length = payload_length;
 	memcpy(packet->payload, payload, payload_length);
+	packet->frag_id = frag_id;
+	packet->frag_no = frag_no;
+	packet->frag_total = frag_total;
 	packet->crc = crc16(payload, payload_length);
 };
 
