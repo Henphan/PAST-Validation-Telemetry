@@ -7,10 +7,10 @@
  * fills the array with the binary representation in bytes 
  * Little-Endian ordering
 */
-void double_to_hex(unsigned char* hex_array, double val){
+void double_to_hex(uint8_t * hex_array, double val){
 	int i;
 	// ptr to 8-byte becomes ptr to 1-byte
-	unsigned char *ptr = (unsigned char *)&val;
+	uint8_t *ptr = (uint8_t *)&val;
 	// loop over the size of val (8-byte)
 	for(i = 0; i < sizeof(val); i++){
 		hex_array[i] = ptr[i];
@@ -24,10 +24,10 @@ void double_to_hex(unsigned char* hex_array, double val){
  * fills out an array of binary representation for each attribute
  * Little-Endian ordering
 */
-void entry_to_hex(unsigned char hex_array[][8], double* entry){
+void entry_to_hex(uint8_t hex_array[][8], double* entry, int length){
 	int i;
 	// NOTE: HARDCODED ENTRY ARRAY SIZE
-	for(i = 0; i < 4; i++){
+	for(i = 0; i < length; i++){
 		double_to_hex(hex_array[i], entry[i]);
 	}
 }

@@ -3,10 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 //#include "gnss_data.h"
-// #include "binary_conversion.h"
 #include "packet.h"
 #include "utils.h"
-
+#include "binary_conversion.h"
+#include "crc_algorithm.h"
 
 void read_data(char* data[][4]);
 
@@ -23,40 +23,20 @@ int main(void){
 	// 	s1.alt = strtod(raw_data[i][3], &endptr);
 	// 	s_array[i] = s1;
 	// }
-	
-	Packet packet1;
-
-	// payload of containing 8 bytes of data
-	u8 data[] = {
-		0xAB,
-		0xCD,
-		0xEF,
-		0xCD,
-		0xEF,
-		0x01,
-		0x23,
-		0x45,
-		0x67,
-		0x89,
-		0xAB,
-		0xCD,
-		0xEF,
-		0x01,
-		0x45,
-		0xAB
-	};
-	u8 length = sizeof(data);
-
-	// buffer space for the final packet
-	u8 buffer[256];
+  
+	// Creating a payload
+	int length = 9;
+	uint8_t message[9] = "123456789";
+	// Getting the CRC of the payload
+	uint16_t crc = crc16(message, length);
+  // Creating the packet
+  createPacket(&packet1, 0x01, data, length);
+  // Serialising the packet into a buffer
+  u8 buffer[256];
 	u16 blength;
-
-	createPacket(&packet1, 0x01, data, length);
 	blength = serialisePacket(packet1, buffer);
-
-	printf("%d\n",blength);
-
-	for(i = 0; i < blength; i++){
+  // Printing out the packet
+ 	for(i = 0; i < blength; i++){
 		printf("%02X ", buffer[i]);
 	}
 	printf("\n");
