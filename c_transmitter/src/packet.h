@@ -8,7 +8,7 @@ typedef struct {
 	u8 type;
 	u8 length;
 	u8 payload[251];
-	u8 crc;
+	u16 crc;
 }Packet;
 
 void createPacket(
