@@ -5,6 +5,7 @@
 //#include "gnss_data.h"
 // #include "binary_conversion.h"
 #include "packet.h"
+#include "utils.h"
 
 
 void read_data(char* data[][4]);
@@ -25,9 +26,11 @@ int main(void){
 	
 	Packet packet1;
 
-	// 64-bit data
-	uint8_t data[8] = {
+	// payload of containing 8 bytes of data
+	u8 data[] = {
 		0xAB,
+		0xCD,
+		0xEF,
 		0xCD,
 		0xEF,
 		0x01,
@@ -35,12 +38,20 @@ int main(void){
 		0x45,
 		0x67,
 		0x89,
+		0xAB,
+		0xCD,
+		0xEF,
+		0x01,
+		0x45,
+		0xAB
 	};
+	u8 length = sizeof(data);
 
-	uint8_t buffer[256];
-	uint16_t blength;
+	// buffer space for the final packet
+	u8 buffer[256];
+	u16 blength;
 
-	createPacket(&packet1, 0x01, data, 8);
+	createPacket(&packet1, 0x01, data, length);
 	blength = serialisePacket(packet1, buffer);
 
 	printf("%d\n",blength);

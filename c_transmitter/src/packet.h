@@ -1,25 +1,25 @@
 #ifndef PACKET_H
 #define PACKET_H
 
-#include <stdint.h>
+#include "utils.h"
 
 typedef struct {
-	uint16_t start_marker;
-	uint8_t type;
-	uint8_t length;
-	uint8_t payload[251];
-	uint8_t crc;
+	u16 start_marker;
+	u8 type;
+	u8 length;
+	u8 payload[251];
+	u8 crc;
 }Packet;
 
 void createPacket(
 	Packet* packet,
-	uint8_t type,
-	uint8_t* payload,
+	u8 type,
+	u8* payload,
 	int payload_length
 );
 
-uint16_t serialisePacket(
-	Packet packet, uint8_t buffer[256]
+u16 serialisePacket(
+	Packet packet, u8 buffer[256]
 );
 
 #endif

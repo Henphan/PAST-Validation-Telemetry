@@ -1,13 +1,12 @@
 #include "packet.h"
-#include <stdint.h>
+#include "utils.h"
 #include <string.h>
-#include <stdio.h>
 
-void createPacket(Packet *packet, uint8_t type, uint8_t* payload, int payload_length){
+void createPacket(Packet *packet, u8 type, u8* payload, int payload_length){
 	packet->start_marker = 0xAAAA;
 	packet->type = type;
 	packet->length = payload_length;
-	memcpy(packet->payload, payload, packet->length);
+	memcpy(packet->payload, payload, payload_length);
 	// TODO: Replace placeholder with CRC code
 	packet->crc = 0x1;
 };
@@ -15,13 +14,13 @@ void createPacket(Packet *packet, uint8_t type, uint8_t* payload, int payload_le
 // takes in the Packet and a 256-byte buffer
 // copies data into buffer 
 // returns the number of bytes used
-uint16_t serialisePacket(Packet packet, uint8_t buffer[256]){
+u16 serialisePacket(Packet packet, u8 buffer[256]){
 	// 16-bit because we need to track up until 256
-	uint16_t index = 0;
+	u16 index = 0;
 
 	// assigning default fields
 	// TODO: Yo this part could be cooked later on
-	// start_marker is uint16_t being assigned to uint8_t
+	// start_marker is u16 being assigned to u8
 	for(int i = 0; i < 2; i++){
 		buffer[index++] = packet.start_marker;
 	}
