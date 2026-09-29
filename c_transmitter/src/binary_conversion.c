@@ -26,7 +26,6 @@ void double_to_hex(uint8_t * hex_array, double val){
 */
 void entry_to_hex(uint8_t hex_array[][8], double* entry, int length){
 	int i;
-	// NOTE: HARDCODED ENTRY ARRAY SIZE
 	for(i = 0; i < length; i++){
 		double_to_hex(hex_array[i], entry[i]);
 	}
