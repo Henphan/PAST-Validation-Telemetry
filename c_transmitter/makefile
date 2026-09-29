@@ -1,8 +1,8 @@
 # As per https://www.cs.colby.edu/maxwell/courses/tutorials/maketutor/
 CC = gcc
 TARGET = out/program 
-OBJS = src/gnss_data.o src/binary_conversion.o src/crc_algorithm.o src/main.o 
-DEPS = src/gnss_data.h src/binary_conversion.h src/crc_algorithm.h
+OBJS = src/packet.c src/gnss_data.o src/binary_conversion.o src/crc_algorithm.o src/main.o 
+DEPS = src/packet.h src/gnss_data.h src/binary_conversion.h src/crc_algorithm.h
 
 $(TARGET): $(OBJS)
 	$(CC) -o $@ $^

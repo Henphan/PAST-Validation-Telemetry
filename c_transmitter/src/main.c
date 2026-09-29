@@ -3,9 +3,10 @@
 #include <stdlib.h>
 #include <string.h>
 //#include "gnss_data.h"
+#include "packet.h"
+#include "utils.h"
 #include "binary_conversion.h"
 #include "crc_algorithm.h"
-
 
 void read_data(char* data[][4]);
 
@@ -22,44 +23,24 @@ int main(void){
 	// 	s1.alt = strtod(raw_data[i][3], &endptr);
 	// 	s_array[i] = s1;
 	// }
-
-	// double attr;
-	// double entry[] = {134713.00,-32.02342,115.96431,2800.00};
-	// unsigned char hex_array[4][8];
-	// entry_to_hex(hex_array, entry);
-	//
-	// uint8_t poly = 0xB;
-	// crc_remainder(hex_array, poly);
-	//
-	// uint8_t a1 = 0xAA;
-	// uint8_t a2 = 0xAA;
-	// uint8_t b = 0xD;
-	//
-	// for (i = 7; i >= 3; i--) {
-	//     if (a1 & (1U << i)) {
-	// 	a1 ^= b << (i - 3);
-	//     }
-	// }
-	//
-	// printf("First remainder: %02X\n", a1);
-	//
-	// uint16_t working = (((uint16_t)a1 << 8) | a2) << 3;
-	//
-	// for (i = 15; i >= 3; i--) {
-	//     if (working & (1U << i)) {
-	// 	working ^= (uint16_t)b << (i - 3);
-	//     }
-	// }
-	//
-	// printf("Final CRC: %02X\n", working);
-
-
-	// Creating a message
-	int length = 9;
-	uint8_t message[9] = "123456789";
-	// Getting the crc of the message:
+  
+	// Creating a payload
+	uint8_t message[] = "123456789";
+	int length = sizeof(message)-1; // -1 for the null terminator
+	// Getting the CRC of the payload
 	uint16_t crc = crc16(message, length);
-	printf("Remainder: 0x%04X\n", crc);
+	// Creating the packet
+	Packet packet1;
+	createPacket(&packet1, 0x01, message, length);
+	// Serialising the packet into a buffer
+	u8 buffer[256];
+	u16 blength;
+	blength = serialisePacket(packet1, buffer);
+	// Printing out the packet
+	for(i = 0; i < blength; i++){
+		printf("%02X ", buffer[i]);
+	}
+	printf("\n");
 
 	return 0;
 };
