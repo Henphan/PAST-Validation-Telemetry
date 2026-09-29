@@ -1,8 +1,10 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 //#include "gnss_data.h"
 #include "binary_conversion.h"
+#include "crc_algorithm.h"
 
 
 void read_data(char* data[][4]);
@@ -20,19 +22,45 @@ int main(void){
 	// 	s1.alt = strtod(raw_data[i][3], &endptr);
 	// 	s_array[i] = s1;
 	// }
-	double attr;
-	double entry[] = {134713.00,-32.02342,115.96431,2800.00};
-	unsigned char hex_array[4][8];
 
-	entry_to_hex(hex_array, entry);
+	// double attr;
+	// double entry[] = {134713.00,-32.02342,115.96431,2800.00};
+	// unsigned char hex_array[4][8];
+	// entry_to_hex(hex_array, entry);
+	//
+	// uint8_t poly = 0xB;
+	// crc_remainder(hex_array, poly);
+	//
+	// uint8_t a1 = 0xAA;
+	// uint8_t a2 = 0xAA;
+	// uint8_t b = 0xD;
+	//
+	// for (i = 7; i >= 3; i--) {
+	//     if (a1 & (1U << i)) {
+	// 	a1 ^= b << (i - 3);
+	//     }
+	// }
+	//
+	// printf("First remainder: %02X\n", a1);
+	//
+	// uint16_t working = (((uint16_t)a1 << 8) | a2) << 3;
+	//
+	// for (i = 15; i >= 3; i--) {
+	//     if (working & (1U << i)) {
+	// 	working ^= (uint16_t)b << (i - 3);
+	//     }
+	// }
+	//
+	// printf("Final CRC: %02X\n", working);
 
-	for(i = 0; i < 4; i++){
-		for(j = 0; j < 8; j++){
-			printf("%02X ", hex_array[i][j]);
-		}
-		printf("\n");
-	}
-	
+
+	// Creating a message
+	int length = 9;
+	uint8_t message[9] = "123456789";
+	// Getting the crc of the message:
+	uint16_t crc = crc16(message, length);
+	printf("Remainder: 0x%04X\n", crc);
+
 	return 0;
 };
 
