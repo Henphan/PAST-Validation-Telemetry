@@ -25,18 +25,19 @@ int main(void){
 	// }
   
 	// Creating a payload
-	int length = 9;
-	uint8_t message[9] = "123456789";
+	uint8_t message[] = "123456789";
+	int length = sizeof(message)-1; // -1 for the null terminator
 	// Getting the CRC of the payload
 	uint16_t crc = crc16(message, length);
-  // Creating the packet
-  createPacket(&packet1, 0x01, data, length);
-  // Serialising the packet into a buffer
-  u8 buffer[256];
+	// Creating the packet
+	Packet packet1;
+	createPacket(&packet1, 0x01, message, length);
+	// Serialising the packet into a buffer
+	u8 buffer[256];
 	u16 blength;
 	blength = serialisePacket(packet1, buffer);
-  // Printing out the packet
- 	for(i = 0; i < blength; i++){
+	// Printing out the packet
+	for(i = 0; i < blength; i++){
 		printf("%02X ", buffer[i]);
 	}
 	printf("\n");
