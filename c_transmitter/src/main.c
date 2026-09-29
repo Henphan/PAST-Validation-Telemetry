@@ -54,34 +54,12 @@ int main(void){
 	// printf("Final CRC: %02X\n", working);
 
 
-	uint8_t message[16] = {
-		0x01,
-		0x23,
-		0x45,
-		0x67,
-		0x89,
-		0xAB,
-		0xCD,
-		0xEF,
-		0x01,
-		0x23,
-		0x45,
-		0x67,
-		0x89,
-		0xAB,
-		0xCD,
-		0xEF
-	};
-	int length = 16;
-
-	uint16_t poly = 0x8005;
-	uint16_t crc;
-
-	// crc = crc_remainder(message, length, poly, 16);
-	// printf("Remainder: 0x%02X, %d\n", crc, crc);
-
-	crc = crc16(message, 16);
-	printf("Remainder: 0x%02X, %d\n", crc, crc);
+	// Creating a message
+	int length = 9;
+	uint8_t message[9] = "123456789";
+	// Getting the crc of the message:
+	uint16_t crc = crc16(message, length);
+	printf("Remainder: 0x%04X\n", crc);
 
 	return 0;
 };
