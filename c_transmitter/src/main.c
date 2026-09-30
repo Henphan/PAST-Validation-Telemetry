@@ -2,7 +2,6 @@
 #include <stdio.h>
 #include <math.h>
 #include <stdlib.h>
-#include <string.h>
 #include "gnss_data.h"
 #include "packet.h"
 #include "utils.h"
@@ -42,15 +41,18 @@ int main(void){
 			}
 		}
 	}
+
 	// Creating a payload
 	int length = sizeof(message1)-1; // -1 for the null terminator
 	// Getting the CRC of the payload
 	uint16_t crc = crc16(message1, length);
 	// Creating the packet
 	
-	int packet_num = (int)ceil(length / (double)PAYLOAD_MAX);
-	int frag_length;
-	int frag_id = 0;
+	u16 packet_num = (int)ceil(length / (double)PAYLOAD_MAX);
+	u16 frag_length;
+	u16 frag_id = 0;
+
+	u8* ptr = message1;
 
 	for(int i = 0; i < packet_num; i++){
 		// Getting the length of each fragment
@@ -64,7 +66,7 @@ int main(void){
 
 		// Creating the fragment
 		Packet packet1;
-		createPacket(&packet1, 0x01, message1, frag_length, frag_id, i, packet_num);
+		createPacket(&packet1, 0x01, ptr, frag_length, frag_id, i+1, packet_num);
 
 		// Serialising the packet into a buffer
 		u8 buffer[256];
@@ -74,13 +76,14 @@ int main(void){
 		// Printing out the packet
 		printf("Fragment %d\n", i);
 		printf("Payload length: %d\n", frag_length);
+		printf("Packet length: %d\n", blength);
 		for(int k = 0; k < blength; k ++){
 			printf("%02X ", buffer[k]);
 		}
 		printf("\n");
 
 		// Moving along the packet
-		*message1 = message1[PAYLOAD_MAX-1];
+		ptr += frag_length;
 	}
 
 	return 0;

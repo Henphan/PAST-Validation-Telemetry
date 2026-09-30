@@ -42,6 +42,16 @@ u16 serialisePacket(Packet packet, u8 buffer[256]){
 		buffer[index++] = packet.payload[i];
 	}
 
+	// fragment info
+	buffer[index++] = packet.frag_id;
+	buffer[index++] = packet.frag_id >> 8;
+
+	buffer[index++] = packet.frag_no;
+	buffer[index++] = packet.frag_no >> 8;
+
+	buffer[index++] = packet.frag_total;
+	buffer[index++] = packet.frag_total >> 8;
+
 	// crc
 	buffer[index++] = packet.crc >> 8;
 	buffer[index++] = packet.crc;
