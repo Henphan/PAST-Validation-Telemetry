@@ -43,7 +43,7 @@ int main(void){
 	}
 
 	// Creating a payload
-	int length = sizeof(message1)-1; // -1 for the null terminator
+	int length = sizeof(message1);
 	// Getting the CRC of the payload
 	uint16_t crc = crc16(message1, length);
 	// Creating the packet

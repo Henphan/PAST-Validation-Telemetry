@@ -88,5 +88,5 @@ for byte in data:
         print("CRC")
     else:
         print("GARBAGE")
-    if packet.validate_crc(): # if crc's match
-        my_packets.append(copy.deepcopy(packet))
+if packet.validate_crc(): # if crc's match
+    my_packets.append(copy.deepcopy(packet))
