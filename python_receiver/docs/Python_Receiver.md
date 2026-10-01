@@ -19,3 +19,16 @@ The second most important part of the project. It will be a program which receiv
 ### Assumptions of approach:
 - For now, if any error is raised during this process then we will restart the entire process -- starting again with the starter marker.
 - For now, we will assume that there will be no errors during the process.
+
+### 1/10/2026
+- Have as of commit f20d832, we have implemented a Python pipeline which goes from the byte data to a Packet object.
+- This is achieved through an elaborate if and elif sequence, where we are essentially going down the checklist of the start marker, type, length, payload, etc.
+- This, howevever, would give rise to these questions:
+    - How would this work in a real scenario, where bytes are available one at a time?
+    - What would happen if the first start marker is false, and the real start marker occurs later down the line?
+    - How would the pipeline restart for a new packet?
+    - How are fragments of a large frame handled?
+#### Next plan of action:
+- I will merge this branch into the main branch, as opposed to the transmitter branch because this one seems much less impacting.
+- I will then pull the changes onto thet transmitter branch, where I can then test out the pipline with the decoding code.
+- I will admit that I have messed up by writing the decoding code on the transmitter branch. It was a lapse of judgement along with a temporary sense of laziness in the moment.
