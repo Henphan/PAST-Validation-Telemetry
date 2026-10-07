@@ -1,0 +1,84 @@
+## Mutli-Packet Payload
+### Date: 29/09/2026
+As of 29/09/2026, I have created a simple pipeline for the "data --> payload --> packet --> serialised data" pipeline. The next step is to add a feature which will allow payloads larger than the maximum payload size (250 bytes right now), to be sent over multiple packets.
+### Intuition:
+- My understanding of the problem is that in the future implementation, I will have to try to pack as much data into one packet as possible.
+- This would be more efficient to send compared to creating a packet for each row of doubles in the GNSS data.
+- However, it is expected that the entire GNSS data table will take up more than 250 bytes of payload, therefore multiple packets will be used.
+- I assume that it is a problem that data sent over the serial network can lose its ordering, meaning that packets may be received out of order.
+- Another problem is that multiple packets of different data may be received together. E.g. GNSS and IMU packets being received consecutively.
+- That means that is is my job to add metadata fields that will let the receiver understand which packets belong to which group, and what order should it be in.
+- The importance of these data means that it should also be covered by the CRC algorithm.
+- My goal is to research what metadata fields are commonly used in the industry to solve this problem.
+### Research:
+- [GeeksForGeeks - Fragmentation Packet](https://www.geeksforgeeks.org/computer-networks/what-is-fragmentation-of-a-packet/)
+- [LinkedIn - Fragmented Packets](https://www.linkedin.com/pulse/understanding-fragmented-packets-network-david-zhu-d82uc/)
+    - Packet fragmentation is a process used when the maximum segment size (MSS) is smaller than the size of the packet.
+    - While that is not a limitation in this case, it still be applied.
+    - IPv4 fragmentation structure:
+        - Identification bits: 16-bit field to identify packets of the same frame -- same for all fragments of the same packet.
+        - DF (Do not Fragment): 1 bit field, indicates whether this packet can be fragmented.
+        - MF (More Fragment): 1 bit field, 1 indicates that more packets of this frame is coming, 0 indicates that this is the last fragment.
+        - Fragmentation offset: 13-bit field, the position of this fragment in the original packet
+    - Fragmentation formula (modified):
+        - num. of packet = size of packet / max payload size
+        - the number of data bytes being sent previous = the "sum of fragmentation offset" (unsure what this means...)
+    - Fragmentation process:
+        - The transmitter receives a large packet -- exceeding the maximum payload
+        - The packet will be fragmented into smaller packets
+        - The header of each packet will be updated to accurately represent it
+        - These smaller fragments are transmitted as normal packets
+    - Advantages:
+        - Allows fragments from different frames to be sent simultaneously
+        - Increase throughput, performance, and efficiency
+    - Disadvantages:
+        - The reordering of fragments is required at the destination, which is the Python receiver in this case
+        - Loss of data increases (?)
+### Implementation design for the project 
+- Let say that a GNSS data table has 20 rows, with 4 doubles each row.
+- We will have 32 bytes each row, and 640 bytes in total after parsing and converting.
+- Our current packets have the headers of:
+    - Start marker (2 bytes)
+    - Length (1 byte)
+    - Type (1 byte)
+    - Payload (250 bytes)
+    - CRC (2 bytes)
+- I am proposing that we add two extra fields:
+    - Fragment identification (2 byte) -- used to identify fragments of the same frame
+    - Fragment number (2 byte) -- represents the fragment order within the frame
+    - Frame total (2 byte) -- represents how many fragments in this frame
+        - A frame total of 1 implies that it is the only packet of its frame
+- Implied constraints:
+    - The new payload max size is 244 bytes
+    - A payload can have a maximum size of 244 * 65,535 = 15,990,540 bytes
+        - This is equal to 3,997,635 rows of GNSS data
+- Now back to the original problem, with 640 bytes, we will divide it with the max payload size.
+    - 640 / 244 = 2.62
+- This implies that we will need at least three packets to represent all the data.
+- Example fields for each packet:
+    - Packet 1:
+        - Start: 0xAAAA
+        - Length: 0xF4
+        - Type: 0x01
+        - Payload: the first 244 bytes of the original payload
+        - Fragment identification: 0x20AB
+        - Fragment number: 0x01
+        - Frame total: 0x03
+    - Packet 2:
+        - Start: 0xAAAA
+        - Length: 0xF4
+        - Type: 0x01
+        - Payload: the next 244 bytes of the original payload
+        - Fragment identification: 0x20AB
+        - Fragment number: 0x02
+        - Frame total: 0x03
+    - Packet 3:
+        - Start: 0xAAAA
+        - Length: 0x98
+        - Type: 0x01
+        - Payload: the final 152 bytes of the original payload
+        - Fragment identification: 0x20AB
+        - Fragment number: 0x03
+        - Frame total: 0x03
+### Key considerations
+    - How will the fragment identification be determined? Random? Systematic?
