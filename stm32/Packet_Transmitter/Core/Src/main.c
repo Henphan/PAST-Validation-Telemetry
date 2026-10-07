@@ -18,11 +18,17 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "packet.h"
+#include "crc_algorithm.h"
+#include "binary_conversion.h"
+#include "gnss_data.h"
+#include "utils.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
 #include <stdio.h>
+#include <unistd.h>
 
 /* USER CODE END Includes */
 
@@ -67,10 +73,18 @@ static void MX_USART2_UART_Init(void);
   */
 int main(void)
 {
-
   /* USER CODE BEGIN 1 */
+	static u8 serial_string[51] = "";
+	u8 payload[] = "123456789";
+	Packet packet;
+	createPacket(&packet, 0x01, payload, sizeof(payload) - 1, 0, 1, 1);
 
-	static uint8_t serial_string[51] = "";
+	u8 buffer[256];
+
+	u16 packet_length = serialisePacket(
+	    packet,
+	    buffer
+	);
 
   /* USER CODE END 1 */
 
@@ -101,16 +115,37 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	sprintf((char *)serial_string, "Hello from STM32L4 via UART.\r\n");
-	HAL_UART_Transmit(&huart2,serial_string, 51, 10);
+  // while (1)
+  // {
+	// HAL_UART_Transmit(
+	// 	&huart2,
+	// 	buffer,
+	// 	packet_length,
+	// 	HAL_MAX_DELAY
+	// );
+	// HAL_Delay(1000);
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-  }
+  // }
+
+  while (1)
+{
+    uint8_t msg[] = "HELLO\r\n";
+
+    HAL_UART_Transmit(
+        &huart2,
+        msg,
+        sizeof(msg) - 1,
+        HAL_MAX_DELAY
+    );
+
+    HAL_Delay(1000);
+}
   /* USER CODE END 3 */
 }
+
 
 /**
   * @brief System Clock Configuration

@@ -1,0 +1,6 @@
+[wokwi]
+version = 1
+firmware = 'Debug/Packet_Transmitter.elf'
+elf = 'Debug/Packet_Transmitter.elf'
+
+rfc2217ServerPort = 4000
