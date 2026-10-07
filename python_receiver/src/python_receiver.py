@@ -155,7 +155,7 @@ for i in range(0, len(payload), 8): # decoding the bytes into doubles
     chunk = payload[i:i+8]
     # print(chunk.hex(" ").upper()) # debugging code
     if len(chunk) == 8:
-        double = struct.unpack('d', chunk)[0]
+        double = struct.unpack('<d', chunk)[0]
         # print(chunk.hex(" ").upper()) # debugging code
         gnss_frame.append(double)
 
