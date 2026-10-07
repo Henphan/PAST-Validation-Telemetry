@@ -34,34 +34,34 @@ $(wildcard ../makefile.init) \
 $(wildcard ../makefile.targets) \
 
 
-BUILD_ARTIFACT_NAME := L432KC_Blink
+BUILD_ARTIFACT_NAME := Packet_Transmitter
 BUILD_ARTIFACT_EXTENSION := elf
 BUILD_ARTIFACT_PREFIX :=
 BUILD_ARTIFACT := $(BUILD_ARTIFACT_PREFIX)$(BUILD_ARTIFACT_NAME)$(if $(BUILD_ARTIFACT_EXTENSION),.$(BUILD_ARTIFACT_EXTENSION),)
 
 # Add inputs and outputs from these tool invocations to the build variables 
 EXECUTABLES += \
-L432KC_Blink.elf \
+Packet_Transmitter.elf \
 
 MAP_FILES += \
-L432KC_Blink.map \
+Packet_Transmitter.map \
 
 SIZE_OUTPUT += \
 default.size.stdout \
 
 OBJDUMP_LIST += \
-L432KC_Blink.list \
+Packet_Transmitter.list \
 
 
 # All Target
 all: main-build
 
 # Main-build Target
-main-build: L432KC_Blink.elf secondary-outputs
+main-build: Packet_Transmitter.elf secondary-outputs
 
 # Tool invocations
-L432KC_Blink.elf L432KC_Blink.map: $(OBJS) $(USER_OBJS) /Users/henphan/PAST_Code/L432KC_Blink/STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "L432KC_Blink.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/henphan/PAST_Code/L432KC_Blink/STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="L432KC_Blink.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Packet_Transmitter.elf Packet_Transmitter.map: $(OBJS) $(USER_OBJS) /Users/henphan/Documents/GitHub/PAST-Validation-Telemetry/stm32/Packet_Transmitter/STM32L432KCUX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "Packet_Transmitter.elf" @"objects.list" $(USER_OBJS) $(LIBS) -mcpu=cortex-m4 -T"/Users/henphan/Documents/GitHub/PAST-Validation-Telemetry/stm32/Packet_Transmitter/STM32L432KCUX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Packet_Transmitter.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 
@@ -70,14 +70,14 @@ default.size.stdout: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
 	@echo 'Finished building: $@'
 	@echo ' '
 
-L432KC_Blink.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "L432KC_Blink.list"
+Packet_Transmitter.list: $(EXECUTABLES) makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-objdump -h -S $(EXECUTABLES) > "Packet_Transmitter.list"
 	@echo 'Finished building: $@'
 	@echo ' '
 
 # Other Targets
 clean:
-	-$(RM) L432KC_Blink.elf L432KC_Blink.list L432KC_Blink.map default.size.stdout
+	-$(RM) Packet_Transmitter.elf Packet_Transmitter.list Packet_Transmitter.map default.size.stdout
 	-@echo ' '
 
 secondary-outputs: $(SIZE_OUTPUT) $(OBJDUMP_LIST)

@@ -1,0 +1,2 @@
+../Core/Src/binary_conversion.c:10:6:double_to_hex	32	static
+../Core/Src/binary_conversion.c:27:6:entry_to_hex	32	static
